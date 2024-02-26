@@ -41,6 +41,7 @@ jobs:
           with:
             node-version: '18.x'
         - run: npm install
+        - run: echo Running Jest Unit tests
         - run: npm test
         
         - name: Upload test report

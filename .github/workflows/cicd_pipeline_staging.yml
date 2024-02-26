@@ -74,8 +74,26 @@ jobs:
           docker run -d -p 3001:3000 --name=nodejs-image_cgi ${{ secrets.DOCKER_USERNAME }}/nodejs-image_cgi:${{ github.sha }}
           docker ps
 
-          
-  release:
+  create-GitHub-Release:
+
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: Parse release version from git tag
+        run: echo "release-version=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Print out parsed release version
+        run: echo Parsed release version is:${{ env.release-version }}
+   
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          name: Release v${{ env.release-version }}
+          tag: ${{ env.release-version }}
+
+
+  deploy:
     runs-on: ubuntu-latest
     needs: build
     if: startsWith(github.ref, 'refs/tags/')
