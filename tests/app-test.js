@@ -1,12 +1,14 @@
-const assert = require('assert');
-const { myFunction } = require('../app');
+const request = require('supertest');
+const app = require('../app');
 
-describe('App', function () {
-    describe('myFunction', function () {
-        it('should return "Hello World"', function () {
-            assert.strictEqual(myFunction(), 'Hello World');
-        });
+describe('GET /', function () {
+    it('responds with text "Hello world, Herzlich Willkommen bei meiner Präsentation"', function (done) {
+        request(app)
+            .get('/')
+            .expect(200)
+            .end(function (err, res) {
+                if (err) return done(err);
+                done();
+            });
     });
 });
-
-

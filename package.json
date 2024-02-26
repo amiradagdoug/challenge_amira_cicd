@@ -12,5 +12,8 @@
   "dependencies": {
     "express": "^4.18.2",
     "mocha-junit-reporter": "^2.0.0"
+  },
+  "devDependencies": {
+    "supertest": "^6.3.4"
   }
 }
