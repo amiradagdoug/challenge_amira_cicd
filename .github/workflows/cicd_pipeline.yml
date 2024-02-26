@@ -31,21 +31,17 @@ jobs:
           docker push ${{secrets.DOCKER_USERNAME }}/nodejs-image_amira:latest
 
   test:
-    runs-on: ubuntu-latest 
     needs:  build-and-push 
-    steps:
-        - name: Checkout repository 
-          uses: actions/checkout@v2
-        
-        - name: Install dependencies
-          run: npm install
-      
-        
-        - name: Run integration tests
-          run: npm run test:integration
-        
-        - name: Generate test report
-          run: npx mocha --reporter mocha-junit-reporter > test-report.xml
+    runs-on: ubuntu-latest 
+    steps: 
+        - name: checkout repo
+          uses: actions/checkout@v3
+        - name: use node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '18.x'
+        - run: npm install
+        - run: npm test
         
         - name: Upload test report
           if: always()
