@@ -67,10 +67,12 @@ jobs:
 
       - name: Deploy to Staging
         run: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/nodejs-image_cgi:${{ github.sha }}
         
-          docker run -d -p 3001:3000 --name=nodejs-image_cgi ${{ secrets.DOCKER_USERNAME }}/nodejs-image_cgi:${{ github.sha }}
-          docker ps
+         sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nodejs-image_cgi:${{ github.sha }}
+         sudo docker stop nodejs-image_cgi || true
+         sudo docker rm nodejs-image_cgi || true
+         sudo docker run -d -p 3001:3000 --name=nodejs-image_cgi ${{ secrets.DOCKER_USERNAME }}/nodejs-image_cgi:${{ github.sha }}
+         sudo docker ps
 
   create-GitHub-Release:
 
@@ -105,7 +107,8 @@ jobs:
       - name: Deploy to Production
         run: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/nodejs-image_cgi:${{ github.sha }}
-         
+          docker stop nodejs-image_cgi || true
+          docker rm nodejs-image_cgi || true
           docker run -d -p 3001:3000 --name=nodejs-image_cgi ${{ secrets.DOCKER_USERNAME }}/nodejs-image_cgi:${{ github.sha }}
           docker ps
 
