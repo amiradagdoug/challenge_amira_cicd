@@ -87,7 +87,7 @@ jobs:
         run: echo Parsed release version is:${GITHUB_REF#refs/*/}
    
       - name: Create GitHub Release
-      run: echo Parsed release version is:${GITHUB_REF#refs/*/}
+        run: echo Parsed release version is:${GITHUB_REF#refs/*/}
 
 
   deploy:
