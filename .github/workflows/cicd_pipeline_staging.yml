@@ -102,9 +102,8 @@ jobs:
 
       - name: Deploy to Production
         run: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/nodejs-image_amira:${{ github.sha }}
-          docker stop nodejs-image_amira || true
-          docker rm nodejs-image_amira || true
-          docker run -d -p 3003:3000 --name=nodejs-image_amira ${{ secrets.DOCKER_USERNAME }}/nodejs-image_amira:${{ github.sha }}
-          docker ps
-
+         sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nodejs-image_amira:latest
+         sudo docker stop nodejs-image_amira || true
+         sudo docker rm nodejs-image_amira || true
+         sudo docker run -d -p 3003:3000 --name=nodejs-image_amira ${{ secrets.DOCKER_USERNAME }}/nodejs-image_amira:latest
+         sudo docker ps
