@@ -44,9 +44,9 @@ jobs:
         - run: echo Running Jest Unit tests
         - run: npm test
         
-        - name: Upload test report
+        - name: Upload test report Artefact
           if: always()
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v1
           with:
            name: test-report  
            path: test-report.xml

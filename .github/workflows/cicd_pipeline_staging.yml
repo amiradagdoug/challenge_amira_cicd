@@ -30,29 +30,26 @@ jobs:
             echo "Current Git Ref: ${{ github.ref }}"
 
   test:
-    runs-on: ubuntu-latest
-   
+    needs:  build
+    runs-on: ubuntu-latest 
+
     steps: 
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm test
-
-      - name: Generate test report
-        run: npm run generate-test-report
-
-      - name: Run Mocha with JUnit Reporter
-        run: npx mocha --reporter mocha-junit-reporter > test-report.xml
-
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-report
-          path: test-report.xml
+        - name: checkout repo
+          uses: actions/checkout@v3
+        - name: use node.js
+          uses: actions/setup-node@v3
+          with:
+             node-version: '18.x'
+        - run: npm install
+        - run: echo Running Jest Unit tests
+        - run: npm test
+                  
+        - name: Upload test report Artefact
+          if: always()
+          uses: actions/upload-artifact@v1
+          with:
+            name: test-report  
+            path: test-report.xml
 
   staging:
     runs-on: ubuntu-latest
@@ -84,13 +81,13 @@ jobs:
       - name: Parse release version from git tag
         run: echo "release-version=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Print out parsed release version
-        run: echo Parsed release version is:${{ env.release-version }}
+        run: echo Parsed release version is:${GITHUB_REF#refs/*/}
    
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          name: Release v${{ env.release-version }}
-          tag: ${{ env.release-version }}
+          name: Release v${GITHUB_REF#refs/*/}
+          tag: ${GITHUB_REF#refs/*/}
 
 
   deploy:
@@ -111,3 +108,4 @@ jobs:
           docker rm nodejs-image_cgi || true
           docker run -d -p 3001:3000 --name=nodejs-image_cgi ${{ secrets.DOCKER_USERNAME }}/nodejs-image_cgi:${{ github.sha }}
           docker ps
+
