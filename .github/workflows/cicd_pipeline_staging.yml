@@ -104,7 +104,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Deploy to Production 
+      - name: Deploy to Production  
         run: |
          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nodejs-image_amira:latest
          sudo docker stop nodejs-image_amira || true
